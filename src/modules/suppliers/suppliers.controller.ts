@@ -33,7 +33,9 @@ export const getSupplierById = async (req: Request, res: Response): Promise<void
     try {
         const { id } = req.params;
 
-        const supplier = await PartyDetails.findByPk(id);
+        const supplier = await PartyDetails.findOne({
+            where: { partyId: id },
+        });
 
         if (!supplier) {
             res.status(404).json({
@@ -64,6 +66,8 @@ export const getSupplierById = async (req: Request, res: Response): Promise<void
  */
 export const createSupplier = async (req: Request, res: Response): Promise<void> => {
     try {
+
+
         const validation = partyDetailsCreateSchema.safeParse({
             ...req.body,
             createdBy: req.auth?.userId || 'system',
@@ -84,7 +88,21 @@ export const createSupplier = async (req: Request, res: Response): Promise<void>
             return;
         }
 
-        const supplier = await PartyDetails.create(validation.data);
+        const phoneNumber = validation.data.phone; 
+
+        const cleanedPhone = String(phoneNumber).replace(/\D/g, '');
+
+        const last4 = cleanedPhone.slice(-4);
+        const rand = Math.floor(100 + Math.random() * 900);
+
+
+
+        const partyId = `SUP-${last4}-${rand}`;
+
+        const saveData = { ...validation.data, partyId };
+
+
+        const supplier = await PartyDetails.create(saveData);
 
         res.status(201).json({
             success: true,
@@ -109,7 +127,9 @@ export const updateSupplier = async (req: Request, res: Response): Promise<void>
     try {
         const { id } = req.params;
 
-        const supplier = await PartyDetails.findByPk(id);
+        const supplier = await PartyDetails.findOne({
+            where: { partyId: id }
+        });
 
         if (!supplier) {
             res.status(404).json({
@@ -163,7 +183,10 @@ export const deleteSupplier = async (req: Request, res: Response): Promise<void>
     try {
         const { id } = req.params;
 
-        const supplier = await PartyDetails.findByPk(id);
+        const supplier = await PartyDetails.findOne({
+            where: { partyId: id },
+            
+        });
 
         if (!supplier) {
             res.status(404).json({

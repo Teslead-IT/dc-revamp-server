@@ -2,7 +2,7 @@ import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 
 export interface PartyDetailsAttributes {
     id: number;
-    partyId: number;
+    partyId: string;
     partyName: string;
     addressLine1: string;
     addressLine2: string;
@@ -12,7 +12,7 @@ export interface PartyDetailsAttributes {
     pinCode: number;
     gstinNumber: string;
     email: string;
-    phone: number;
+    phone: string;
     createdBy: string;
     updatedBy: string;
     createdAt?: Date;
@@ -27,7 +27,7 @@ export class PartyDetails
     extends Model<PartyDetailsAttributes, PartyDetailsCreationAttributes>
     implements PartyDetailsAttributes {
     public id!: number;
-    public partyId!: number;
+    public partyId!: string;
     public partyName!: string;
     public addressLine1!: string;
     public addressLine2!: string;
@@ -37,7 +37,7 @@ export class PartyDetails
     public pinCode!: number;
     public gstinNumber!: string;
     public email!: string;
-    public phone!: number;
+    public phone!: string;
     public createdBy!: string;
     public updatedBy!: string;
 
@@ -56,7 +56,7 @@ export function initializePartyDetailsModel(sequelize: Sequelize): typeof PartyD
                 autoIncrement: true,
             },
             partyId: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.STRING(100),
                 unique: true,
                 allowNull: false,
             },
@@ -97,7 +97,7 @@ export function initializePartyDetailsModel(sequelize: Sequelize): typeof PartyD
                 allowNull: false,
             },
             phone: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.STRING(50),
                 allowNull: false,
             },
             createdBy: {

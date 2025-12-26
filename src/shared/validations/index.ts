@@ -16,7 +16,7 @@ export const loginSchema = z.object({
 
 // Party Details validation schemas
 export const partyDetailsCreateSchema = z.object({
-    partyId: z.number().int().positive(),
+    // partyId: z.string().min(1, 'Party ID is required'),
     partyName: z.string().min(1, 'Party name is required'),
     addressLine1: z.string().min(1, 'Address line 1 is required'),
     addressLine2: z.string().min(1, 'Address line 2 is required'),
@@ -26,9 +26,60 @@ export const partyDetailsCreateSchema = z.object({
     pinCode: z.number().int().positive(),
     gstinNumber: z.string().min(15, 'GSTIN must be 15 characters').max(15),
     email: z.string().email('Invalid email format'),
-    phone: z.number().int().positive(),
+    phone: z.string().min(7, 'Phone number must be at least 7 digits').max(15, 'Phone number must be at most 15 digits'),
     createdBy: z.string(),
     updatedBy: z.string(),
 });
 
 export const partyDetailsUpdateSchema = partyDetailsCreateSchema.partial();
+
+export const draftDCCreateSchema = z.object({
+    draftId: z.string().min(1, 'Draft ID is required'),
+    userId: z.string().min(1, 'User ID is required'),
+    partyId: z.string().min(1, 'Party ID is required'),
+    dcDate: z.string().min(1, 'DC Date is required'),
+    remarks: z.string().optional(),
+    isAdmin: z.boolean().optional(),
+    createdBy: z.string(),
+    updatedBy: z.string(),
+});
+export const draftDCUpdateSchema = draftDCCreateSchema.partial();
+
+export const draftDCItemsCreateSchema = z.object({
+    draftId: z.string().min(1, 'Draft ID is required'),
+    partyId: z.string().min(1, 'Party ID is required'),
+    items: z.array(z.object({
+        itemName: z.string().min(1, 'Item Name is required'),
+        itemDescription: z.string().min(1, 'Item Description is required'),
+        uom: z.string().min(1, 'Unit of Measure is required'),
+        quantity: z.number().positive('Quantity must be a positive number'),
+        weightPerUnit: z.number().positive('Weight per unit must be a positive number'),
+        totalWeight: z.number().positive('Total weight must be a positive number'),
+        ratePerEach: z.number().positive('Rate per each must be a positive number'),
+        squareFeetPerUnit: z.number().positive('Square feet per each must be a positive number'),
+        totalSquareFeet: z.number().positive('Total square feet must be a positive number'),
+        remarks: z.string().min(1, 'Remarks is required'),
+        projectName: z.string().min(1, 'Project Name is required'),
+        projectIncharge: z.string().min(1, 'Project Incharge is required'),
+        notes: z.string().min(1, 'Notes is required'),
+        createdBy: z.string().optional(),
+        updatedBy: z.string().optional(),
+    })),
+    // itemId: z.string().min(1, 'Item ID is required'),
+    // itemName: z.string().min(1, 'Item Name is required'),
+    // itemDescription: z.string().min(1, 'Item Description is required'),
+    // uom: z.string().min(1, 'Unit of Measure is required'),
+    // quantity: z.number().positive('Quantity must be a positive number'),
+    // weightPerUnit: z.number().positive('Weight per unit must be a positive number'),
+    // totalWeight: z.number().positive('Total weight must be a positive number'),
+    // ratePerEach: z.number().positive('Rate per each must be a positive number'),
+    // squareFeetPerUnit: z.number().positive('Square feet per each must be a positive number'),
+    // totalSquareFeet: z.number().positive('Total square feet must be a positive number'),
+    // remarks: z.string().min(1, 'Remarks is required'),
+    // projectName: z.string().min(1, 'Project Name is required'),
+    // projectIncharge: z.string().min(1, 'Project Incharge is required'),
+    // notes: z.string().min(1, 'Notes is required'),
+    // createdBy: z.string().optional(),
+    // updatedBy: z.string().optional(),
+});
+export const draftDCItemsUpdateSchema = draftDCItemsCreateSchema.partial();
