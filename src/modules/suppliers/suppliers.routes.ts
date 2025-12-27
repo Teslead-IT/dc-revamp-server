@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, type Router as ExpressRouter } from 'express';
 import {
     getAllSuppliers,
     getSupplierById,
@@ -8,7 +8,7 @@ import {
 } from './suppliers.controller';
 import { authMiddleware } from '../../shared/middleware/authControl';
 
-const router = Router();
+const router: ExpressRouter = Router();
 
 // All routes require authentication
 router.use(authMiddleware);
