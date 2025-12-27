@@ -50,14 +50,15 @@ export const draftDCItemsCreateSchema = z.object({
     partyId: z.string().min(1, 'Party ID is required'),
     items: z.array(z.object({
         itemName: z.string().min(1, 'Item Name is required'),
+        itemId: z.string().optional()   ,
         itemDescription: z.string().min(1, 'Item Description is required'),
         uom: z.string().min(1, 'Unit of Measure is required'),
         quantity: z.number().positive('Quantity must be a positive number'),
-        weightPerUnit: z.number().positive('Weight per unit must be a positive number'),
-        totalWeight: z.number().positive('Total weight must be a positive number'),
+        weightPerUnit: z.number().min(0, 'Weight per unit must be a non-negative number'),
+        totalWeight: z.number().min(0, 'Total weight must be a non-negative number'),
         ratePerEach: z.number().positive('Rate per each must be a positive number'),
-        squareFeetPerUnit: z.number().positive('Square feet per each must be a positive number'),
-        totalSquareFeet: z.number().positive('Total square feet must be a positive number'),
+        squareFeetPerUnit: z.number().min(0, 'Square feet per each must be a non-negative number'),
+        totalSquareFeet: z.number().min(0, 'Total square feet must be a non-negative number'),
         remarks: z.string().min(1, 'Remarks is required'),
         projectName: z.string().min(1, 'Project Name is required'),
         projectIncharge: z.string().min(1, 'Project Incharge is required'),
@@ -82,4 +83,28 @@ export const draftDCItemsCreateSchema = z.object({
     // createdBy: z.string().optional(),
     // updatedBy: z.string().optional(),
 });
-export const draftDCItemsUpdateSchema = draftDCItemsCreateSchema.partial();
+export const draftDCItemsUpdateSchema = z.object({
+  items: z.array(
+    z.object({
+      itemId: z.string().min(1, "Item ID is required"),
+
+      itemName: z.string().optional(),
+      itemDescription: z.string().optional(),
+      uom: z.string().optional(),
+      quantity: z.number().positive().optional(),
+      weightPerUnit: z.number().min(0).optional(),
+      totalWeight: z.number().min(0).optional(),
+      ratePerEach: z.number().positive().optional(),
+      squareFeetPerUnit: z.number().min(0).optional(),
+      totalSquareFeet: z.number().min(0).optional(),
+      remarks: z.string().optional(),
+      projectName: z.string().optional(),
+      projectIncharge: z.string().optional(),
+      notes: z.string().optional(),
+
+      // never client-controlled
+      createdBy: z.never().optional(),
+      updatedBy: z.never().optional(),
+    })
+  ).min(1, "At least one item must be provided"),
+});
