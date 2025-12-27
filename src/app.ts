@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express, { NextFunction, Request, Response, Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
@@ -6,7 +6,7 @@ import env from './shared/utils/env';
 import { logger } from './shared/utils/logger';
 import mainRouter from './modules/main/index.routes';
 
-const app = express();
+const app: Application = express();
 
 // Middlewares
 app.use(helmet());
