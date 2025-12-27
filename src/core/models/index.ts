@@ -29,6 +29,11 @@ export function initializeModels(sequelize: Sequelize) {
 export function initializeAssociations() {
     // Define associations here when needed
     // Example: User.hasMany(DraftDC, { foreignKey: 'createdBy', as: 'drafts' });
+
+    logger.info('✅ Associations initialized');
+    DraftDC.hasMany(DraftDCItems, { foreignKey: 'draftId', sourceKey: 'draftId', as: 'draftDcItems' });
+    DraftDC.belongsTo(PartyDetails, { foreignKey: 'partyId', targetKey: 'partyId', as: 'partyDetails' });
+    DraftDCItems.belongsTo(DraftDC, { foreignKey: 'draftId', targetKey: 'draftId', as: 'draftDcDetails' });
 }
 
 export async function syncDatabase(options: SyncOptions = { alter: true }) {

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { PartyDetails } from '../../core/models';
 import { partyDetailsCreateSchema, partyDetailsUpdateSchema } from '../../shared/validations';
+import { Op } from 'sequelize';
 
 /**
  * GET /api/suppliers
@@ -8,6 +9,33 @@ import { partyDetailsCreateSchema, partyDetailsUpdateSchema } from '../../shared
  */
 export const getAllSuppliers = async (req: Request, res: Response): Promise<void> => {
     try {
+        const userId = req.body.userId ?? req.auth?.userId;
+        const {searchTerm} = req.query;
+
+        if (!userId) {
+            res.status(400).json({
+                success: false,
+                message: 'User ID is required',
+            });
+            return;
+        }
+        if (searchTerm && typeof searchTerm === 'string') {
+            const suppliers = await PartyDetails.findAll({
+                where: {
+                    partyName: {
+                        [Op.iLike]: `%${searchTerm}%`
+                    }
+                }
+            });
+
+            res.status(200).json({
+                success: true,
+                message: suppliers.length > 0 ? 'Suppliers found' : 'No suppliers found',
+                data: { suppliers },
+            });
+            return;
+        }
+
         const suppliers = await PartyDetails.findAll();
 
         res.status(200).json({
