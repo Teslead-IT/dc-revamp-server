@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getAllDraftDcItems, createDraftDcItem} from './draftDcItems.controller';
+import { getAllDraftDcItems, getDraftDcItemById, createDraftDcItem, updateDraftDcItems, deleteDraftDcItem} from './draftDcItems.controller';
 import { authMiddleware } from '../../shared/middleware/authControl';
 
 const router = Router();
@@ -8,9 +8,9 @@ const router = Router();
 router.use(authMiddleware);
 
 router.get('/', getAllDraftDcItems);
-// router.get('/:id', getSupplierById);
+router.get('/:id', getDraftDcItemById);
 router.post('/', createDraftDcItem);
-// router.put('/:id', updateSupplier);
-// router.delete('/:id', deleteSupplier);
+router.put('/:id', updateDraftDcItems);
+router.delete('/:id', deleteDraftDcItem);
 
 export default router;
