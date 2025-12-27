@@ -1,9 +1,9 @@
-import { Router } from 'express';
+import { Router, type Router as ExpressRouter } from 'express';
 import {getAllDraftDcs, getDraftDcById, createDraftDc, updateDraftDc, deleteDraftDc, getDraftDcDetails} from './draftDc.controller';
 import { authMiddleware } from '../../shared/middleware/authControl';
 import { get } from 'http';
 
-const router = Router();
+const router: ExpressRouter = Router();
 
 // All routes require authentication
 router.use(authMiddleware);
