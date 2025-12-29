@@ -14,8 +14,7 @@ build/
 .env.*.local
 
 # Logs
-logs/
-*.log
+# (logs folder is now tracked)
 
 # IDE
 .vscode/
