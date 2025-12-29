@@ -9,34 +9,59 @@ export const pgConnect = async (): Promise<Sequelize> => {
         return sequelize;
     }
 
-    console.log("postgresql connection", env.DB_PASSWORD, env.DB_USER, env.DB_HOST, env.DB_PORT, env.DB_NAME);
-
     try {
-        sequelize = new Sequelize({
-            host: env.DB_HOST,
-            port: env.DB_PORT,
-            database: env.DB_NAME,
-            username: env.DB_USER,
-            password: env.DB_PASSWORD,
-            dialect: 'postgres',
-            logging: env.NODE_ENV === 'development' ? (msg) => logger.debug(msg) : false,
-            pool: {
-                max: 20,
-                min: 0,
-                acquire: 60000,
-                idle: 10000,
-            },
-            dialectOptions: {
-                connectTimeout: 60000,
-                // Enable SSL for production (required by many cloud providers)
-                ...(env.NODE_ENV === 'production' && {
+        // Use DATABASE_URL (Supabase connection string) if available
+        if (env.DATABASE_URL) {
+            logger.info('🔗 Connecting to database using CONNECTION STRING...');
+
+            sequelize = new Sequelize(env.DATABASE_URL, {
+                dialect: 'postgres',
+                logging: env.NODE_ENV === 'development' ? (msg) => logger.debug(msg) : false,
+                pool: {
+                    max: 20,
+                    min: 0,
+                    acquire: 60000,
+                    idle: 10000,
+                },
+                dialectOptions: {
                     ssl: {
                         require: true,
-                        rejectUnauthorized: false // Change to true if you have proper SSL cert
-                    }
-                })
-            },
-        });
+                        rejectUnauthorized: false // Required for Supabase
+                    },
+                    connectTimeout: 60000,
+                }
+            });
+        } else {
+            // Fallback to individual parameters
+            logger.info('🔗 Connecting to database using INDIVIDUAL PARAMETERS...');
+            logger.info(`DB Config: ${env.DB_USER}@${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}`);
+
+            sequelize = new Sequelize({
+                host: env.DB_HOST,
+                port: env.DB_PORT,
+                database: env.DB_NAME,
+                username: env.DB_USER,
+                password: env.DB_PASSWORD,
+                dialect: 'postgres',
+                logging: env.NODE_ENV === 'development' ? (msg) => logger.debug(msg) : false,
+                pool: {
+                    max: 20,
+                    min: 0,
+                    acquire: 60000,
+                    idle: 10000,
+                },
+                dialectOptions: {
+                    connectTimeout: 60000,
+                    // Enable SSL for production (required by many cloud providers)
+                    ...(env.NODE_ENV === 'production' && {
+                        ssl: {
+                            require: true,
+                            rejectUnauthorized: false
+                        }
+                    })
+                },
+            });
+        }
 
         await sequelize.authenticate();
         logger.info('✅ PostgreSQL connected successfully');
