@@ -12,11 +12,17 @@ http.globalAgent.maxFreeSockets = 20000;
 
 const initializeServer = async () => {
     try {
+        logger.info('🚀 Starting server initialization...');
+        logger.info(`Environment: ${env.NODE_ENV}`);
+        logger.info(`DB_SYNC: ${env.DB_SYNC}`);
+        logger.info(`DATABASE_URL present: ${!!env.DATABASE_URL}`);
+
         // Connect to database
         const sequelize = await pgConnect();
-        logger.info('Database connected successfully');
+        logger.info('✅ Database connected successfully');
 
         // Initialize models (REQUIRED - these define the ORM structure)
+        logger.info('📦 Initializing models...');
         initializeModels(sequelize);
         initializeAssociations();
         logger.info('✅ Models initialized');
@@ -30,16 +36,20 @@ const initializeServer = async () => {
             await syncDatabase({ alter: true });
             logger.info('✅ Database synced successfully');
         } else {
+            logger.info('⚠️  DB_SYNC is false, checking if tables exist...');
             // Check if tables exist, if not, auto-sync (important for first deploy)
             try {
                 await sequelize.query('SELECT 1 FROM users LIMIT 1');
-                logger.info('⏭️  Database sync skipped (tables exist)');
+                logger.info('✅ Database sync skipped (tables exist)');
             } catch (error) {
                 logger.warn('⚠️  Tables not found, auto-syncing database...');
+                logger.warn(`Error details: ${error instanceof Error ? error.message : error}`);
                 await syncDatabase({ alter: true });
                 logger.info('✅ Database auto-synced successfully');
             }
         }
+
+        logger.info('🎉 Database initialization complete!');
 
         // Create HTTP server
         const server = createServer(app);
