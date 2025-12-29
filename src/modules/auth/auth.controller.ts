@@ -97,9 +97,12 @@ export const login = async (req: Request, res: Response): Promise<void> => {
  */
 export const setup = async (req: Request, res: Response): Promise<void> => {
     try {
-        const userCount = await User.count();
+        // const userCount = await User.count();
+        const userCount = await User.findOne({
+            where: { role: 'super_admin' }
+        });
 
-        if (userCount > 0) {
+        if (userCount) {
             res.status(403).json({
                 success: false,
                 message: 'Users already exist. Use /api/auth/create-user endpoint instead.',
