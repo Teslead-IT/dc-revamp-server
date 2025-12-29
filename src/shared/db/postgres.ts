@@ -28,6 +28,13 @@ export const pgConnect = async (): Promise<Sequelize> => {
             },
             dialectOptions: {
                 connectTimeout: 60000,
+                // Enable SSL for production (required by many cloud providers)
+                ...(env.NODE_ENV === 'production' && {
+                    ssl: {
+                        require: true,
+                        rejectUnauthorized: false // Change to true if you have proper SSL cert
+                    }
+                })
             },
         });
 

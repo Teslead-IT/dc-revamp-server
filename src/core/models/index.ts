@@ -38,7 +38,7 @@ export function initializeAssociations() {
 
 export async function syncDatabase(options: SyncOptions = { alter: true }) {
     try {
-        logger.info('🔁 Starting database sync...');
+        logger.info('🔁 Starting database sync...', { options });
 
         await User.sync(options);
         logger.info('✅ User table synced');
@@ -54,7 +54,11 @@ export async function syncDatabase(options: SyncOptions = { alter: true }) {
 
         logger.info('🎉 Database sync completed');
     } catch (error) {
-        logger.error('❌ Database sync failed:', error);
+        logger.error('❌ Database sync failed:', {
+            error: error instanceof Error ? error.message : error,
+            stack: error instanceof Error ? error.stack : undefined,
+            options
+        });
         throw error;
     }
 }
