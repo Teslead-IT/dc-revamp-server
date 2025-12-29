@@ -6753,3 +6753,24 @@
 {"level":"info","message":"🚀 Server running on http://localhost:3011","timestamp":"2025-12-29 15:38:31"}
 {"level":"info","message":"Environment: development","timestamp":"2025-12-29 15:38:31"}
 {"level":"info","message":"Received shutdown signal. Closing server...","timestamp":"2025-12-29 15:38:44"}
+{"level":"debug","message":"Executing (default): SELECT 1+1 AS result","timestamp":"2025-12-29 15:46:09"}
+{"level":"info","message":"✅ PostgreSQL connected successfully","timestamp":"2025-12-29 15:46:09"}
+{"level":"info","message":"Database connected successfully","timestamp":"2025-12-29 15:46:09"}
+{"level":"info","message":"✅ Models initialized","timestamp":"2025-12-29 15:46:09"}
+{"level":"info","message":"✅ Associations initialized","timestamp":"2025-12-29 15:46:09"}
+{"level":"info","message":"✅ Models initialized","timestamp":"2025-12-29 15:46:09"}
+{"level":"info","message":"⏭️  Database sync skipped (DB_SYNC=false)","timestamp":"2025-12-29 15:46:09"}
+{"level":"info","message":"🚀 Server running on http://localhost:3011","timestamp":"2025-12-29 15:46:09"}
+{"level":"info","message":"Environment: development","timestamp":"2025-12-29 15:46:09"}
+{"level":"info","message":"Incoming request: POST /api/auth/login","timestamp":"2025-12-29 15:46:14"}
+{"level":"debug","message":"Executing (default): SELECT \"id\", \"userId\", \"email\", \"name\", \"password\", \"role\", \"isActive\", \"createdAt\", \"updatedAt\", \"deletedAt\" FROM \"users\" AS \"User\" WHERE (\"User\".\"deletedAt\" IS NULL AND \"User\".\"userId\" = 'admin-1');","timestamp":"2025-12-29 15:46:14"}
+{"level":"info","message":"Request completed: POST /login - 200 in 267ms","timestamp":"2025-12-29 15:46:15"}
+{"level":"debug","message":"Executing (default): SELECT 1+1 AS result","timestamp":"2025-12-29 15:49:54"}
+{"level":"info","message":"✅ PostgreSQL connected successfully","timestamp":"2025-12-29 15:49:54"}
+{"level":"info","message":"Database connected successfully","timestamp":"2025-12-29 15:49:54"}
+{"level":"info","message":"✅ Models initialized","timestamp":"2025-12-29 15:49:54"}
+{"level":"info","message":"✅ Associations initialized","timestamp":"2025-12-29 15:49:54"}
+{"level":"info","message":"✅ Models initialized","timestamp":"2025-12-29 15:49:54"}
+{"level":"info","message":"⏭️  Database sync skipped (DB_SYNC=false)","timestamp":"2025-12-29 15:49:54"}
+{"level":"info","message":"🚀 Server running on http://localhost:3011","timestamp":"2025-12-29 15:49:54"}
+{"level":"info","message":"Environment: development","timestamp":"2025-12-29 15:49:54"}
