@@ -5391,3 +5391,19 @@
 {"level":"info","message":"⏭️  Database sync skipped (DB_SYNC=false)","timestamp":"2025-12-29 12:39:08"}
 {"level":"info","message":"🚀 Server running on http://localhost:3011","timestamp":"2025-12-29 12:39:08"}
 {"level":"info","message":"Environment: development","timestamp":"2025-12-29 12:39:08"}
+{"level":"info","message":"Incoming request: OPTIONS /api/auth/verify-user","timestamp":"2025-12-29 12:39:26"}
+{"level":"info","message":"Request completed: OPTIONS /api/auth/verify-user - 204 in 35ms","timestamp":"2025-12-29 12:39:26"}
+{"level":"info","message":"Incoming request: POST /api/auth/verify-user","timestamp":"2025-12-29 12:39:26"}
+{"level":"debug","message":"Executing (default): SELECT \"id\", \"userId\", \"email\", \"name\", \"password\", \"role\", \"isActive\", \"createdAt\", \"updatedAt\", \"deletedAt\" FROM \"users\" AS \"User\" WHERE (\"User\".\"deletedAt\" IS NULL AND \"User\".\"userId\" = 'admin-1');","timestamp":"2025-12-29 12:39:27"}
+{"level":"info","message":"Request completed: POST /verify-user - 200 in 490ms","timestamp":"2025-12-29 12:39:27"}
+{"level":"info","message":"Incoming request: OPTIONS /api/auth/login","timestamp":"2025-12-29 12:39:31"}
+{"level":"info","message":"Request completed: OPTIONS /api/auth/login - 204 in 1ms","timestamp":"2025-12-29 12:39:31"}
+{"level":"info","message":"Incoming request: POST /api/auth/login","timestamp":"2025-12-29 12:39:31"}
+{"level":"debug","message":"Executing (default): SELECT \"id\", \"userId\", \"email\", \"name\", \"password\", \"role\", \"isActive\", \"createdAt\", \"updatedAt\", \"deletedAt\" FROM \"users\" AS \"User\" WHERE (\"User\".\"deletedAt\" IS NULL AND \"User\".\"userId\" = 'admin-1');","timestamp":"2025-12-29 12:39:31"}
+{"level":"info","message":"Request completed: POST /login - 200 in 160ms","timestamp":"2025-12-29 12:39:31"}
+{"level":"info","message":"Incoming request: OPTIONS /api/auth/session","timestamp":"2025-12-29 12:39:34"}
+{"level":"info","message":"Request completed: OPTIONS /api/auth/session - 204 in 1ms","timestamp":"2025-12-29 12:39:34"}
+{"level":"info","message":"Incoming request: GET /api/auth/session","timestamp":"2025-12-29 12:39:34"}
+{"level":"debug","message":"Executing (default): SELECT \"id\", \"userId\", \"email\", \"name\", \"password\", \"role\", \"isActive\", \"createdAt\", \"updatedAt\", \"deletedAt\" FROM \"users\" AS \"User\" WHERE (\"User\".\"deletedAt\" IS NULL AND \"User\".\"userId\" = 'admin-1');","timestamp":"2025-12-29 12:39:34"}
+{"level":"info","message":"Request completed: GET /session - 304 in 8ms","timestamp":"2025-12-29 12:39:34"}
+{"level":"info","message":"Received shutdown signal. Closing server...","timestamp":"2025-12-29 12:39:37"}
