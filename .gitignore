@@ -14,8 +14,8 @@ build/
 .env.*.local
 
 # Logs
-
-# *.log
+logs/
+*.log
 
 # IDE
 .vscode/
