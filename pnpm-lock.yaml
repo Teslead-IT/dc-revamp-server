@@ -35,6 +35,9 @@ dependencies:
   sequelize:
     specifier: ^6.35.2
     version: 6.37.7(pg-hstore@2.3.4)(pg@8.16.3)
+  typescript:
+    specifier: ^5.3.3
+    version: 5.9.3
   winston:
     specifier: ^3.11.0
     version: 3.19.0
@@ -67,9 +70,6 @@ devDependencies:
   ts-node:
     specifier: ^10.9.2
     version: 10.9.2(@types/node@20.19.27)(typescript@5.9.3)
-  typescript:
-    specifier: ^5.3.3
-    version: 5.9.3
 
 packages:
 
@@ -1657,7 +1657,6 @@ packages:
     resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
     engines: {node: '>=14.17'}
     hasBin: true
-    dev: true
 
   /undefsafe@2.0.5:
     resolution: {integrity: sha512-WxONCrssBM8TSPRqN5EmsjVrsv4A8X12J4ArBiiayv3DyyG3ZlIg6yysuuSYdZsVz3TKcTg2fd//Ujd4CHV1iA==}
