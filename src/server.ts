@@ -24,7 +24,9 @@ const initializeServer = async () => {
         // Sync database (optional - controlled by DB_SYNC env variable)
         if (env.DB_SYNC) {
             logger.info('🔁 Starting database sync...');
-            await syncDatabase({ alter: true, force: true });
+            // alter: true - Safely updates schema without dropping tables
+            // WARNING: Never use force: true in production (it deletes all data)
+            await syncDatabase({ alter: true });
             logger.info('✅ Database synced successfully');
         } else {
             logger.info('⏭️  Database sync skipped (DB_SYNC=false)');
