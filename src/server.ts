@@ -22,14 +22,23 @@ const initializeServer = async () => {
         logger.info('✅ Models initialized');
 
         // Sync database (optional - controlled by DB_SYNC env variable)
+        // OR auto-sync in production if tables don't exist (first deployment)
         if (env.DB_SYNC) {
-            logger.info('🔁 Starting database sync...');
+            logger.info('🔁 Starting database sync (DB_SYNC=true)...');
             // alter: true - Safely updates schema without dropping tables
             // WARNING: Never use force: true in production (it deletes all data)
             await syncDatabase({ alter: true });
             logger.info('✅ Database synced successfully');
         } else {
-            logger.info('⏭️  Database sync skipped (DB_SYNC=false)');
+            // Check if tables exist, if not, auto-sync (important for first deploy)
+            try {
+                await sequelize.query('SELECT 1 FROM users LIMIT 1');
+                logger.info('⏭️  Database sync skipped (tables exist)');
+            } catch (error) {
+                logger.warn('⚠️  Tables not found, auto-syncing database...');
+                await syncDatabase({ alter: true });
+                logger.info('✅ Database auto-synced successfully');
+            }
         }
 
         // Create HTTP server
