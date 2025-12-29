@@ -97,15 +97,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
  */
 export const setup = async (req: Request, res: Response): Promise<void> => {
     try {
-        // const userCount = await User.count();
-        const userCount = await User.findOne({
+        // Check if super admin already exists
+        const existingSuperAdmin = await User.findOne({
             where: { role: 'super_admin' }
         });
 
-        if (userCount) {
+        if (existingSuperAdmin) {
             res.status(403).json({
                 success: false,
-                message: 'Users already exist. Use /api/auth/create-user endpoint instead.',
+                message: 'Super admin already exists. Use /api/auth/create-user endpoint instead.',
             });
             return;
         }
@@ -148,6 +148,21 @@ export const setup = async (req: Request, res: Response): Promise<void> => {
         });
     } catch (error: any) {
         console.error('Setup error:', error);
+
+        // Check if error is due to missing table (not synced)
+        if (error.message && (
+            error.message.includes('relation') ||
+            error.message.includes('does not exist') ||
+            error.message.includes('constructor')
+        )) {
+            res.status(500).json({
+                success: false,
+                message: 'Database tables not found. Please set DB_SYNC=true in environment variables and restart the server to create tables.',
+                error: error.message,
+            });
+            return;
+        }
+
         res.status(500).json({
             success: false,
             message: 'Failed to create super-admin user',
