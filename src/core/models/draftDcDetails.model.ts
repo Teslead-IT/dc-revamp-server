@@ -19,6 +19,7 @@ export interface DraftDCAttributes {
     updatedBy: string;
     dcType:  "SPM" | "VALVE" | "QC" ;
     dcDate: Date;
+    supplierSnapshot: any;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
@@ -44,6 +45,7 @@ export class DraftDC extends Model<DraftDCAttributes, DraftDCCreationAttributes>
     public updatedBy!: string;
     public dcType!: "SPM" | "VALVE" | "QC" ;
     public dcDate!: Date;
+    public supplierSnapshot!: any;
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
     public readonly deletedAt!: Date;
@@ -130,6 +132,10 @@ export function initializeDraftDCModel(sequelize: Sequelize): typeof DraftDC {
             dcDate: {
                 type: DataTypes.DATE,
                 allowNull: false,
+            },
+            supplierSnapshot: {
+                type: DataTypes.JSON,
+                allowNull: true
             },
 
         },
