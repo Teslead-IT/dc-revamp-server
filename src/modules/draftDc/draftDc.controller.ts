@@ -205,9 +205,36 @@ export const createDraftDc = async (req: Request, res: Response): Promise<void> 
             return;
         }
 
+        const supplierData =  await PartyDetails.findOne({
+            where: {
+                partyId: draftDcData.partyId
+            }
+        });
+
+        if (!supplierData) {
+            res.status(404).json({
+                success: false,
+                message: "Supplier not found to take snapshot"
+            });
+            return;
+        }
+
 
         const draftDcCreateData = {
             ...req.body,
+            supplierSnapshot: {
+                "partyId": supplierData.partyId,
+                "partyName": supplierData.partyName,
+                "addressLine1": supplierData.addressLine1,
+                "addressLine2": supplierData.addressLine2,
+                "state": supplierData.state,
+                "city": supplierData.city,
+                "pinCode": supplierData.pinCode,
+                "stateCode": supplierData.stateCode,
+                "phone": supplierData.phone,
+                "email": supplierData.email,
+                "gstinNumber": supplierData.gstinNumber
+            },
             userId: userId,
             draftId: "",
             createdBy: userName,
@@ -281,6 +308,36 @@ export const updateDraftDc = async (req: Request, res: Response): Promise<void> 
             return;
         }
 
+
+        const supplierData = await PartyDetails.findOne({
+            where: {
+                partyId: draftDc.partyId
+            }
+        });
+
+        if (!supplierData) {
+            res.status(404).json({
+                success: false,
+                message: "Supplier not found to take snapshot"
+            });
+            return;
+        }
+
+        const supplierSnapshot = {
+            partyId: supplierData.partyId,
+            partyName: supplierData.partyName,
+            addressLine1: supplierData.addressLine1,
+            addressLine2: supplierData.addressLine2,
+            state: supplierData.state,
+            city: supplierData.city,
+            pinCode: supplierData.pinCode,
+            stateCode: supplierData.stateCode,
+            phone: supplierData.phone,
+            email: supplierData.email,
+            gstinNumber: supplierData.gstinNumber
+        };
+
+        req.body.supplierSnapshot = supplierSnapshot;
 
 
         await draftDc.update(req.body);
