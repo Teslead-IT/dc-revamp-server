@@ -1,4 +1,4 @@
-import { DraftDCItems, PartyDetails, User } from "../../core/models/index";
+import { DraftDCItems, PartyDetails, User , ItemNames} from "../../core/models/index";
 import { DraftDC } from "../../core/models/draftDcDetails.model";
 import { Response, Request } from "express";
 import { create } from "domain";
@@ -195,7 +195,7 @@ export const createDraftDc = async (req: Request, res: Response): Promise<void> 
         const userName = req.auth?.name ?? req.body.username;
         const draftDcData = req.body;
 
-        console.log("DC Body", req.body);
+        // console.log("DC Body", req.body);
 
         if (!userId) {
             res.status(400).json({
