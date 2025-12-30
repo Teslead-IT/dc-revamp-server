@@ -3,6 +3,7 @@ import User, { initializeUserModel } from './user.model';
 import PartyDetails, { initializePartyDetailsModel } from './partyDetails.model';
 import DraftDC, { initializeDraftDCModel } from './draftDcDetails.model';
 import { DraftDCItems, initializeDraftDCItemsModel } from './draftDcItems.model';
+import ItemNames, { initializeItemNamesModel } from './itemNames.model';
 import { logger } from '../../shared/utils/logger';
 
 type SyncOptions = {
@@ -21,6 +22,7 @@ export function initializeModels(sequelize: Sequelize) {
     initializePartyDetailsModel(sequelize);
     initializeDraftDCModel(sequelize);
     initializeDraftDCItemsModel(sequelize);
+    initializeItemNamesModel(sequelize);
 
     isInitialized = true;
     logger.info('✅ Models initialized');
@@ -52,6 +54,9 @@ export async function syncDatabase(options: SyncOptions = { alter: true }) {
         await DraftDCItems.sync(options);
         logger.info('✅ DraftDCItems table synced');
 
+        await ItemNames.sync({alter: true, force: true});
+        logger.info('✅ ItemNames table synced');
+
         logger.info('🎉 Database sync completed');
     } catch (error) {
         logger.error('❌ Database sync failed:', {
@@ -63,4 +68,4 @@ export async function syncDatabase(options: SyncOptions = { alter: true }) {
     }
 }
 
-export { User, PartyDetails, DraftDC, DraftDCItems };
+export { User, PartyDetails, DraftDC, DraftDCItems, ItemNames };
