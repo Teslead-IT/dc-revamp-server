@@ -284,6 +284,8 @@ export const updateDraftDc = async (req: Request, res: Response): Promise<void> 
         const userId = req.body.userId ?? req.auth?.userId;
         const { id } = req.params;
 
+        // console.log("Update Draft DC Body", req.body);
+
         if (!userId) {
             res.status(400).json({
                 success: false,
@@ -311,7 +313,7 @@ export const updateDraftDc = async (req: Request, res: Response): Promise<void> 
 
         const supplierData = await PartyDetails.findOne({
             where: {
-                partyId: draftDc.partyId
+                partyId: req.body.partyId
             }
         });
 
