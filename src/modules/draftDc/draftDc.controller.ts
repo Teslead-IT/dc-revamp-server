@@ -1,4 +1,4 @@
-import { DraftDCItems, PartyDetails, User , ItemNames} from "../../core/models/index";
+import { DraftDCItems, PartyDetails, User , Items} from "../../core/models/index";
 import { DraftDC } from "../../core/models/draftDcDetails.model";
 import { Response, Request } from "express";
 import { create } from "domain";

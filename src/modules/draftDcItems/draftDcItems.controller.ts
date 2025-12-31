@@ -1,12 +1,15 @@
 import { Request, Response } from "express";
 import { draftDCItemsCreateSchema, draftDCItemsUpdateSchema } from "../../shared/validations/index";
-import { DraftDCItems, ItemNames } from "../../core/models/index";
+import { DraftDCItems, Items } from "../../core/models/index";
 import { Op, Transaction } from "sequelize";
 import { getSequelize } from "../../shared/db/postgres";
+import { syncItemNamesToMaster } from "../../shared/helperFunctions/itemSearchText";
 
 
 
-const normalizeSearch = (value: string): string => {
+
+
+export const normalizeSearch = (value: string): string => {
   return value
     .toLowerCase()
     .trim()
@@ -36,7 +39,7 @@ export const getAllDraftDcItems = async (
       };
     }
 
-    const { rows, count } = await ItemNames.findAndCountAll({
+    const { rows, count } = await Items.findAndCountAll({
       where: whereClause,
       attributes: ['id', 'itemName'], // 🔥 ONLY what you need
       limit,
@@ -109,48 +112,7 @@ export const getDraftDcItemById = async (req: Request, res: Response): Promise<v
   }
 };
 
-/**
- * Helper: Sync item names to ItemNames master table (bulk-safe)
- */
-async function syncItemNamesToMaster(
-  itemNames: string[],
-  transaction?: Transaction
-): Promise<void> {
-  // Build unique normalized map
-  const normalizedMap = new Map<string, string>();
 
-  for (const name of itemNames) {
-    const normalized = normalizeSearch(name);
-    if (!normalizedMap.has(normalized)) {
-      normalizedMap.set(normalized, name);
-    }
-  }
-
-  if (normalizedMap.size === 0) return;
-
-  // Fetch existing item names in ONE query
-  const existingItems = await ItemNames.findAll({
-    where: {
-      searchText: { [Op.in]: Array.from(normalizedMap.keys()) }
-    },
-    transaction,
-  });
-
-  const existingSearchSet = new Set(existingItems.map((i) => i.searchText));
-
-  // Prepare missing item names
-  const newItemNames = Array.from(normalizedMap.entries())
-    .filter(([normalized]) => !existingSearchSet.has(normalized))
-    .map(([_, itemName]) => ({ itemName }));
-
-  // Bulk insert missing ones
-  if (newItemNames.length > 0) {
-    await ItemNames.bulkCreate(newItemNames, {
-      individualHooks: true, // Required for beforeSave hook
-      transaction,
-    });
-  }
-}
 
 
 export const createDraftDcItem = async (

@@ -108,3 +108,9 @@ export const draftDCItemsUpdateSchema = z.object({
     })
   ).min(1, "At least one item must be provided"),
 });
+
+
+export const itemsCreateSchema = z.object({
+    // standardItemId: z.string().min(1, 'Standard Item ID is required'),
+    itemName: z.string().min(1, 'Item Name is required'),
+});
