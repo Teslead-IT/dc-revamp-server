@@ -1,8 +1,9 @@
 import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 
 
-export interface ItemNamesAttributes {
+export interface ItemsAttributes {
     id: number;
+    standardItemId?: string;
     itemName: string;
     searchText?: string;
     createdAt?: Date;
@@ -11,13 +12,14 @@ export interface ItemNamesAttributes {
 }
 
 
-interface ItemNamesCreationAttributes
-    extends Optional<ItemNamesAttributes, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'> { }
+interface ItemsCreationAttributes
+    extends Optional<ItemsAttributes, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'> { }
 
-export class ItemNames
-    extends Model<ItemNamesAttributes, ItemNamesCreationAttributes>
-    implements ItemNamesAttributes {
+export class Items
+    extends Model<ItemsAttributes, ItemsCreationAttributes>
+    implements ItemsAttributes {
     public id!: number;
+    public standardItemId!: string;
     public itemName!: string;
     public searchText!: string;
     public readonly createdAt!: Date;
@@ -25,8 +27,8 @@ export class ItemNames
     public readonly deletedAt?: Date;
 }
 
-export function initializeItemNamesModel(sequelize: Sequelize): typeof ItemNames {
-    ItemNames.init(
+export function initializeItemsModel(sequelize: Sequelize): typeof Items {
+    Items.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -34,9 +36,15 @@ export function initializeItemNamesModel(sequelize: Sequelize): typeof ItemNames
                 primaryKey: true,
                 autoIncrement: true,
             },
+            standardItemId: {
+                type: DataTypes.STRING(100),
+                allowNull: false,
+                unique: true,
+            },
             itemName: {
                 type: DataTypes.STRING(255),
                 allowNull: false,
+                unique: true,
             },
             searchText: {
                 type: DataTypes.STRING(255),
@@ -45,11 +53,11 @@ export function initializeItemNamesModel(sequelize: Sequelize): typeof ItemNames
         },
         {
             sequelize,
-            modelName: 'ItemNames',
-            tableName: 'item_names',
+            modelName: 'Items',
+            tableName: 'items',
             timestamps: true,
             paranoid: true,
-            comment: 'Table for storing item names',
+            comment: 'Table for storing items details',
             hooks: {
                 beforeSave: (item) => {
                     // 🔥 THIS is where searchText is formatted & stored
@@ -61,7 +69,7 @@ export function initializeItemNamesModel(sequelize: Sequelize): typeof ItemNames
         }
     );
 
-    return ItemNames;
+    return Items;
 }
 
-export default ItemNames;
+export default Items;
