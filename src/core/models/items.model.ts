@@ -39,7 +39,7 @@ export function initializeItemsModel(sequelize: Sequelize): typeof Items {
             standardItemId: {
                 type: DataTypes.STRING(100),
                 allowNull: false,
-                unique: true,
+                unique: false
             },
             itemName: {
                 type: DataTypes.STRING(255),

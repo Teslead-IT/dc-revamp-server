@@ -54,7 +54,7 @@ export async function syncDatabase(options: SyncOptions = { alter: true }) {
         await DraftDCItems.sync(options);
         logger.info('✅ DraftDCItems table synced');
 
-        await Items.sync({alter: true, force: false});
+        await Items.sync({alter: true, force: true });
         logger.info('✅ Items table synced');
 
         logger.info('🎉 Database sync completed');
