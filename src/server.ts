@@ -27,11 +27,9 @@ const initializeServer = async () => {
         initializeAssociations();
         logger.info('✅ Models initialized');
 
-        const DB_SYNC = true;
-
         // Sync database (optional - controlled by DB_SYNC env variable)
         // OR auto-sync in production if tables don't exist (first deployment)
-        if (DB_SYNC) {
+        if (env.DB_SYNC) {
             logger.info('🔁 Starting database sync (DB_SYNC=true)...');
             // alter: true - Safely updates schema without dropping tables
             // WARNING: Never use force: true in production (it deletes all data)
