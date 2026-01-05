@@ -4,6 +4,7 @@ import suppliersRoutes from '../suppliers/suppliers.routes';
 import draftDcRoutes from '../draftDc/draftDc.routes';
 import draftDcItemsRoutes from '../draftDcItems/draftDcItems.routes';
 import itemsRoutes from '../items/items.routes';
+import tableLayouts from '../tableLayouts/tableLayouts.routes';
 
 const router: ExpressRouter = Router();
 
@@ -13,5 +14,6 @@ router.use('/suppliers', suppliersRoutes);
 router.use('/draft-dc', draftDcRoutes);
 router.use('/draft-dc-items', draftDcItemsRoutes);
 router.use('/items', itemsRoutes);
+router.use('/layouts', tableLayouts);
 
 export default router;
