@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { PartyDetails } from '../../core/models';
+import { DraftDC, PartyDetails } from '../../core/models';
 import { partyDetailsCreateSchema, partyDetailsUpdateSchema } from '../../shared/validations';
 import { Op } from 'sequelize';
 
@@ -10,7 +10,7 @@ import { Op } from 'sequelize';
 export const getAllSuppliers = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.body.userId ?? req.auth?.userId;
-        const {searchTerm} = req.query;
+        const { searchTerm } = req.query;
 
         if (!userId) {
             res.status(400).json({
@@ -116,7 +116,7 @@ export const createSupplier = async (req: Request, res: Response): Promise<void>
             return;
         }
 
-        const phoneNumber = validation.data.phone; 
+        const phoneNumber = validation.data.phone;
 
         const cleanedPhone = String(phoneNumber).replace(/\D/g, '');
 
@@ -213,7 +213,7 @@ export const deleteSupplier = async (req: Request, res: Response): Promise<void>
 
         const supplier = await PartyDetails.findOne({
             where: { partyId: id },
-            
+
         });
 
         if (!supplier) {
@@ -225,6 +225,20 @@ export const deleteSupplier = async (req: Request, res: Response): Promise<void>
         }
 
         await supplier.destroy();
+
+        const drafts = await DraftDC.findAll({
+            where: { partyId: id },
+        });
+
+        for (const draft of drafts) {
+            await draft.update({
+                supplierSnapshot: {
+                    ...draft.supplierSnapshot,
+                    deletedStatus: true,
+                }
+            });
+        }
+
 
         res.status(200).json({
             success: true,

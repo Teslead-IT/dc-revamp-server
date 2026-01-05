@@ -233,7 +233,8 @@ export const createDraftDc = async (req: Request, res: Response): Promise<void> 
                 "stateCode": supplierData.stateCode,
                 "phone": supplierData.phone,
                 "email": supplierData.email,
-                "gstinNumber": supplierData.gstinNumber
+                "gstinNumber": supplierData.gstinNumber,
+                "deletedStatus": false
             },
             userId: userId,
             draftId: "",
