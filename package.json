@@ -8,8 +8,7 @@
         "dev:watch": "nodemon --watch src --ext ts",
         "build": "tsc",
         "start": "node dist/server.js",
-        "lint": "eslint src --ext .ts",
-        "db:sync": "ts-node src/scripts/sync-db.ts"
+        "lint": "eslint src --ext .ts"
     },
     "packageManager": "pnpm@8.15.0",
     "keywords": [],

@@ -8,7 +8,7 @@ import { normalizeSearch } from "../../modules/draftDcItems/draftDcItems.control
 async function syncItemNamesToMaster(
     itemNames: string[],
     transaction?: Transaction
-): Promise<void> {
+): Promise<{ created: Items[]; duplicates: string[] }> {
     // Build unique normalized map
     const normalizedMap = new Map<string, string>();
 
@@ -19,7 +19,7 @@ async function syncItemNamesToMaster(
         }
     }
 
-    if (normalizedMap.size === 0) return;
+    if (normalizedMap.size === 0) return { created: [], duplicates: [] };
 
     // Fetch existing item names in ONE query
     const existingItems = await Items.findAll({
@@ -31,31 +31,35 @@ async function syncItemNamesToMaster(
 
     const existingSearchSet = new Set(existingItems.map((i) => i.searchText));
 
-    // Prepare missing item names
-    const newItemNames = Array.from(normalizedMap.entries())
-        .filter(([normalized]) => !existingSearchSet.has(normalized))
-        .map(([_, itemName]) => ({ itemName }));
+    // Prepare missing item names and track duplicates
+    const newItemNames: { itemName: string; normalized: string }[] = [];
+    const duplicates: string[] = [];
+
+    Array.from(normalizedMap.entries()).forEach(([normalized, itemName]) => {
+        if (existingSearchSet.has(normalized)) {
+            duplicates.push(itemName);
+        } else {
+            newItemNames.push({ itemName, normalized });
+        }
+    });
+
+    const createdItems: Items[] = [];
 
     // Bulk insert missing ones
     if (newItemNames.length > 0) {
-        const createdItems = await Items.bulkCreate(
-            newItemNames.map(item => ({ ...item, standardItemId: "", searchText: normalizeSearch(item.itemName) })),
-            {
-                individualHooks: true,
-                transaction,
-            }
-        );
-
-        // Update standardItemId based on created item ids
-        await Promise.all(
-            createdItems.map(item =>
-                item.update(
-                    { standardItemId: `STDIT-${item.id.toString().padStart(6, '0')}` },
-                    { transaction }
-                )
-            )
-        );
+        const bulkCreateData = newItemNames.map(item => ({ 
+            itemName: item.itemName,
+            searchText: item.normalized 
+        }));
+        
+        const created = await Items.bulkCreate(bulkCreateData, {
+            individualHooks: true,
+            transaction,
+        });
+        createdItems.push(...created);
     }
+
+    return { created: createdItems, duplicates };
 }
 
 
