@@ -47,17 +47,24 @@ async function syncItemNamesToMaster(
 
     // Bulk insert missing ones
     if (newItemNames.length > 0) {
-        const bulkCreateData = newItemNames.map(item => ({ 
+        const bulkCreateData = newItemNames.map(item => ({
             itemName: item.itemName,
-            searchText: item.normalized 
+            searchText: item.normalized,
+            standardItemId: ""   // keep consistent with single logic
         }));
-        
-        const created = await Items.bulkCreate(bulkCreateData, {
+
+        const createdItems = await Items.bulkCreate(bulkCreateData, {
             individualHooks: true,
             transaction,
+            returning: true, // IMPORTANT (especially for Postgres)
         });
-        createdItems.push(...created);
+
+        for (const item of createdItems) {
+            item.standardItemId = `STDIT-${item.id.toString().padStart(6, '0')}`;
+            await item.save({ transaction });
+        }
     }
+
 
     return { created: createdItems, duplicates };
 }
