@@ -142,7 +142,7 @@ export const createItem = async (req: Request, res: Response): Promise<void> => 
 
         const result = await addSingleItem(data, "add");
 
-        if (!result) {
+        if (!result.success) {
             res.status(409).json({
                 success: false,
                 message: 'Item already exists',
