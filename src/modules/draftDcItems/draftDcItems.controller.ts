@@ -136,7 +136,7 @@ export const createDraftDcItem = async (
       await transaction?.rollback();
       res.status(400).json({
         success: false,
-        message: 'Validation failed',
+        message: validation.error.message || 'Validation failed',
         errors: validation.error.errors,
       });
       return;
@@ -212,7 +212,7 @@ export const updateDraftDcItems = async (
       await transaction?.rollback();
       res.status(400).json({
         success: false,
-        message: 'Validation failed',
+        message: validation.error.message || 'Validation failed',
         errors: validation.error.errors,
       });
       return;
