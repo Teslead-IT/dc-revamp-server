@@ -110,7 +110,7 @@ export const createSupplier = async (req: Request, res: Response): Promise<void>
 
             res.status(400).json({
                 success: false,
-                message: 'Validation error',
+                message: errors.map((err) => err.message).join(', '),
                 errors,
             });
             return;
@@ -180,7 +180,7 @@ export const updateSupplier = async (req: Request, res: Response): Promise<void>
 
             res.status(400).json({
                 success: false,
-                message: 'Validation error',
+                message: errors.map((err) => err.message).join(', '),
                 errors,
             });
             return;

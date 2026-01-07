@@ -24,9 +24,23 @@ export const partyDetailsCreateSchema = z.object({
     state: z.string().min(1, 'State is required'),
     stateCode: z.number().int().positive(),
     pinCode: z.number().int().positive(),
-    gstinNumber: z.string().min(15, 'GSTIN must be 15 characters').max(15),
-    email: z.string().email('Invalid email format'),
-    phone: z.string().min(7, 'Phone number must be at least 7 digits').max(15, 'Phone number must be at most 15 digits'),
+    gstinNumber: z.preprocess(
+        (val) => {
+            if (val == null) return '';
+            const s = String(val).replace(/\D/g, '');
+            return s;
+        },
+        z.string().length(15, 'GSTIN number must contain exactly 15 digits')
+    ),
+        email: z.string().email('Invalid email format'),
+        phone: z.preprocess(
+            (val) => {
+                if (val == null) return '';
+                const s = String(val).replace(/\D/g, '');
+                return s;
+            },
+            z.string().length(10, 'Phone number must contain exactly 10 digits')
+        ),
     createdBy: z.string(),
     updatedBy: z.string(),
 });
