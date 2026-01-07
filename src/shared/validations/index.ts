@@ -24,23 +24,27 @@ export const partyDetailsCreateSchema = z.object({
     state: z.string().min(1, 'State is required'),
     stateCode: z.number().int().positive(),
     pinCode: z.number().int().positive(),
+
     gstinNumber: z.preprocess(
+        (val) => {
+            if (val == null) return '';
+            return String(val).trim().toUpperCase();
+        },
+        z
+            .string()
+            .length(15, 'GSTIN must be exactly 15 characters')
+            .regex(/^[A-Z0-9]+$/, 'GSTIN must contain only letters and digits')
+    ),
+
+    email: z.string().email('Invalid email format'),
+    phone: z.preprocess(
         (val) => {
             if (val == null) return '';
             const s = String(val).replace(/\D/g, '');
             return s;
         },
-        z.string().length(15, 'GSTIN number must contain exactly 15 digits')
+        z.string().length(10, 'Phone number must contain exactly 10 digits')
     ),
-        email: z.string().email('Invalid email format'),
-        phone: z.preprocess(
-            (val) => {
-                if (val == null) return '';
-                const s = String(val).replace(/\D/g, '');
-                return s;
-            },
-            z.string().length(10, 'Phone number must contain exactly 10 digits')
-        ),
     createdBy: z.string(),
     updatedBy: z.string(),
 });
@@ -64,7 +68,7 @@ export const draftDCItemsCreateSchema = z.object({
     partyId: z.string().min(1, 'Party ID is required'),
     items: z.array(z.object({
         itemName: z.string().min(1, 'Item Name is required'),
-        itemId: z.string().optional()   ,
+        itemId: z.string().optional(),
         itemDescription: z.string().min(1, 'Item Description is required'),
         uom: z.string().min(1, 'Unit of Measure is required'),
         quantity: z.number().positive('Quantity must be a positive number'),
@@ -98,29 +102,29 @@ export const draftDCItemsCreateSchema = z.object({
     // updatedBy: z.string().optional(),
 });
 export const draftDCItemsUpdateSchema = z.object({
-  items: z.array(
-    z.object({
-      itemId: z.string().min(1, "Item ID is required"),
+    items: z.array(
+        z.object({
+            itemId: z.string().min(1, "Item ID is required"),
 
-      itemName: z.string().optional(),
-      itemDescription: z.string().optional(),
-      uom: z.string().optional(),
-      quantity: z.number().positive().optional(),
-      weightPerUnit: z.number().min(0).optional(),
-      totalWeight: z.number().min(0).optional(),
-      ratePerEach: z.number().positive().optional(),
-      squareFeetPerUnit: z.number().min(0).optional(),
-      totalSquareFeet: z.number().min(0).optional(),
-      remarks: z.string().optional(),
-      projectName: z.string().optional(),
-      projectIncharge: z.string().optional(),
-      notes: z.string().optional(),
+            itemName: z.string().optional(),
+            itemDescription: z.string().optional(),
+            uom: z.string().optional(),
+            quantity: z.number().positive().optional(),
+            weightPerUnit: z.number().min(0).optional(),
+            totalWeight: z.number().min(0).optional(),
+            ratePerEach: z.number().positive().optional(),
+            squareFeetPerUnit: z.number().min(0).optional(),
+            totalSquareFeet: z.number().min(0).optional(),
+            remarks: z.string().optional(),
+            projectName: z.string().optional(),
+            projectIncharge: z.string().optional(),
+            notes: z.string().optional(),
 
-      // never client-controlled
-      createdBy: z.never().optional(),
-      updatedBy: z.never().optional(),
-    })
-  ).min(1, "At least one item must be provided"),
+            // never client-controlled
+            createdBy: z.never().optional(),
+            updatedBy: z.never().optional(),
+        })
+    ).min(1, "At least one item must be provided"),
 });
 
 
